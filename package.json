@@ -4,6 +4,7 @@
   "description": "Language server for Cerebras Software Language (CSL) -- diagnostics, hover, go-to-definition, and more.",
   "version": "1.0.0",
   "publisher": "esa-tu-darmstadt",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/esa-tu-darmstadt/csl-lsp-vscode"
