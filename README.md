@@ -51,7 +51,7 @@ This extension is part of a research project at TU Darmstadt (Embedded Systems a
 
 ## Feedback and Contact
 
-Bug reports and feature requests can be filed on the [GitHub issue tracker](https://github.com/esa-tu-darmstadt/csl-lsp-server/issues).
+Bug reports and feature requests can be filed on the [GitHub issue tracker](https://github.com/esa-tu-darmstadt/csl-lsp-vscode/issues).
 
 The underlying compiler infrastructure is not publicly available at this time. If you are interested in the project or in collaborating, feel free to reach out to us by email: noack@esa.tu-darmstadt.de
 
