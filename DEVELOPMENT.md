@@ -32,7 +32,17 @@ Use `npm run watch` to recompile TypeScript on every save.
 
 The extension ships a platform-specific `.vsix` that bundles the `csl-lsp-server` binary. Each target platform needs its own package.
 
-### Steps
+### Using CMake (recommended)
+
+From the build directory:
+
+```bash
+ninja csl-lsp-vscode
+```
+
+This builds the server, copies it into the extension, runs npm install/compile, and produces the `.vsix`. The target is only available when the build is configured with `BUILD_SHARED_LIBS=OFF` and `CMAKE_BUILD_TYPE=Release`. It also requires `npm` on PATH. The platform target is detected automatically from the CMake host.
+
+### Manual Steps
 
 1. Build `csl-lsp-server` for the target platform:
 
@@ -51,6 +61,7 @@ The extension ships a platform-specific `.vsix` that bundles the `csl-lsp-server
 
    ```bash
    cd editors/vscode/csl
+   npm install
    npm run compile
    npx vsce package --target linux-x64
    ```
