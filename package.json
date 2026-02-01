@@ -97,6 +97,11 @@
           "default": {},
           "description": "Parameter bindings passed to the LSP server. Keys are parameter names, values are numbers. Numbers containing '.' are comptime_float, otherwise comptime_int. Example: {\"DIM\": 2, \"Nz\": 4}."
         },
+        "csl.filterOverlappingErrors": {
+          "type": "boolean",
+          "default": false,
+          "description": "When multiple error diagnostics overlap, show only the innermost (most specific) error."
+        },
         "csl.trace.server": {
           "type": "string",
           "enum": [

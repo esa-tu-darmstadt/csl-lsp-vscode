@@ -38,6 +38,8 @@ function createClient(context: vscode.ExtensionContext): LanguageClient {
 
   const params = config.get<Record<string, number>>("params", {});
 
+  const filterOverlappingErrors = config.get<boolean>("filterOverlappingErrors", false);
+
   const rectangle = config.get<string>("rectangle", "100,100");
   const fabricDims = config.get<string>("fabricDims", "100,100");
   const fabricOffsets = config.get<string>("fabricOffsets", "3,3");
@@ -58,6 +60,9 @@ function createClient(context: vscode.ExtensionContext): LanguageClient {
   }
   if (systemImportPath) {
     args.push("--system-import-path", systemImportPath);
+  }
+  if (filterOverlappingErrors) {
+    args.push("--filter-overlapping-errors");
   }
 
   const serverOptions: ServerOptions = {
