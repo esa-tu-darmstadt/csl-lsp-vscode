@@ -72,7 +72,12 @@
         "csl.systemImportPath": {
           "type": "string",
           "default": "",
-          "description": "Search path for system module imports (angle bracket syntax like \"<memcpy/get_params>\")."
+          "description": "Search path for system module imports (angle bracket syntax like \"<memcpy/get_params>\"). When a .sif container is specified via csl.systemModuleSif, this path is used as the internal search path within the SIF container. Leave empty when specifying a SIF container to use the default internal search path (/cb/toolchains/cslang/*/*/csl-libs/)."
+        },
+        "csl.systemModuleSif": {
+          "type": "string",
+          "default": "",
+          "description": "Path to a .sif container for system module resolution. When set, system modules are resolved from the SIF container and opened as read-only virtual documents."
         },
         "csl.rectangle": {
           "type": "string",

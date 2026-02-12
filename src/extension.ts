@@ -10,6 +10,8 @@ import {
 let client: LanguageClient | undefined;
 let outputChannel: vscode.OutputChannel;
 
+const CSL_SDK_SCHEME = "csl-sdk";
+
 function getServerPath(context: vscode.ExtensionContext): string {
   const config = vscode.workspace.getConfiguration("csl");
   const configured = config.get<string>("serverPath", "");
@@ -29,11 +31,26 @@ function getServerPath(context: vscode.ExtensionContext): string {
   return "csl-lsp-server";
 }
 
+/// TextDocumentContentProvider that fetches content for csl-sdk:// URIs
+/// from the LSP server via the custom csl/getFileContent request.
+class CslSdkContentProvider implements vscode.TextDocumentContentProvider {
+  constructor(private client: LanguageClient) { }
+
+  async provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
+    const result = await this.client.sendRequest<{ content: string }>(
+      "csl/getFileContent",
+      { uri: this.client.code2ProtocolConverter.asUri(uri) }
+    );
+    return result.content;
+  }
+}
+
 function createClient(context: vscode.ExtensionContext): LanguageClient {
   const config = vscode.workspace.getConfiguration("csl");
   const serverPath = getServerPath(context);
   const serverArgs = config.get<string[]>("serverArgs", []);
   const arch = config.get<string>("arch", "wse2");
+  const systemModuleSif = config.get<string>("systemModuleSif", "");
   const systemImportPath = config.get<string>("systemImportPath", "");
 
   const params = config.get<Record<string, number>>("params", {});
@@ -61,6 +78,9 @@ function createClient(context: vscode.ExtensionContext): LanguageClient {
   if (systemImportPath) {
     args.push("--system-import-path", systemImportPath);
   }
+  if (systemModuleSif) {
+    args.push("--system-module-sif", systemModuleSif);
+  }
   if (filterOverlappingErrors) {
     args.push("--filter-overlapping-errors");
   }
@@ -71,7 +91,10 @@ function createClient(context: vscode.ExtensionContext): LanguageClient {
   };
 
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [{ scheme: "file", language: "csl" }],
+    documentSelector: [
+      { scheme: "file", language: "csl" },
+      { scheme: CSL_SDK_SCHEME, language: "csl" },
+    ],
     outputChannel,
   };
 
@@ -90,6 +113,14 @@ export function activate(context: vscode.ExtensionContext) {
   client = createClient(context);
   client.start();
 
+  // Register the csl-sdk:// content provider once the client is ready.
+  context.subscriptions.push(
+    vscode.workspace.registerTextDocumentContentProvider(
+      CSL_SDK_SCHEME,
+      new CslSdkContentProvider(client)
+    )
+  );
+
   context.subscriptions.push(
     vscode.commands.registerCommand("csl.restartServer", async () => {
       if (client) {
@@ -99,6 +130,14 @@ export function activate(context: vscode.ExtensionContext) {
       outputChannel.appendLine("Restarting CSL Language Server...");
       client = createClient(context);
       await client.start();
+
+      // Re-register the content provider with the new client.
+      context.subscriptions.push(
+        vscode.workspace.registerTextDocumentContentProvider(
+          CSL_SDK_SCHEME,
+          new CslSdkContentProvider(client)
+        )
+      );
     })
   );
 

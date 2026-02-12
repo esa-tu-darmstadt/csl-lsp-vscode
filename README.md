@@ -9,6 +9,7 @@ Language server for Cerebras Software Language (CSL) providing rich editor featu
 - **Diagnostics** -- real-time error and warning reporting as you type
 - **Hover** -- type information and documentation on hover
 - **Go to Definition** -- jump to the definition of functions, variables, and imports
+- **Auto-completion** -- context-aware code completion suggestions
 - **Document Symbols** -- outline view and symbol search within a file
 
 ## Settings
@@ -19,7 +20,8 @@ Configure the extension under `csl.*` in your VS Code settings:
 |------------------------|----------------------------------------------------------|-------------|
 | `csl.serverPath`       | Override path to the LSP server binary. Leave empty to use the bundled binary. | (empty) |
 | `csl.arch`             | Target architecture.                                     | `wse2`      |
-| `csl.systemImportPath` | Search path for system module imports (`<...>` syntax).  | (empty)     |
+| `csl.systemModuleSif` | Path to a .sif container providing system modules. If specified, this container is used to resolve imports with angle bracket syntax (`<...>`), and `csl.systemImportPath` is used as the internal search path within the container. | (empty)     |
+| `csl.systemImportPath` | Search path for system module imports (`<...>` syntax).  | `/cb/toolchains/cslang/*/*/csl-libs/` if `csl.systemModuleSif` is set, otherwise empty |
 | `csl.params`           | Parameter bindings as key-value pairs. Numbers containing `.` are `comptime_float`, otherwise `comptime_int`. | `{}` |
 | `csl.rectangle`        | Rectangle size as `width,height` for `@get_rectangle`.   | `100,100`   |
 | `csl.fabricDims`       | Fabric dimensions as `width,height`.                     | `100,100`   |
@@ -31,8 +33,8 @@ Configure the extension under `csl.*` in your VS Code settings:
 
 ```json
 {
-  "csl.arch": "wse2",
-  "csl.systemImportPath": "/opt/cerebras/sdk/lib",
+  "csl.arch": "wse3",
+  "csl.systemModuleSif": "/opt/Cerebras-SDK-1.4.0-202505230211-4-d9070058/sdk-cbcore-202505230211-4-9382352f.sif",
   "csl.params": {
     "M": 4,
     "N": 4,
@@ -40,10 +42,6 @@ Configure the extension under `csl.*` in your VS Code settings:
   }
 }
 ```
-
-## Known Limitations
-
-- **No auto-completion** -- due to current limitations with the ANTLR4-based parser, auto-completion is not yet supported.
 
 ## About
 
