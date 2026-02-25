@@ -9,6 +9,7 @@ import {
 
 let client: LanguageClient | undefined;
 let outputChannel: vscode.OutputChannel;
+let cslSdkProviderRegistration: vscode.Disposable | undefined;
 
 const CSL_SDK_SCHEME = "csl-sdk";
 
@@ -114,12 +115,11 @@ export function activate(context: vscode.ExtensionContext) {
   client.start();
 
   // Register the csl-sdk:// content provider once the client is ready.
-  context.subscriptions.push(
-    vscode.workspace.registerTextDocumentContentProvider(
-      CSL_SDK_SCHEME,
-      new CslSdkContentProvider(client)
-    )
+  cslSdkProviderRegistration = vscode.workspace.registerTextDocumentContentProvider(
+    CSL_SDK_SCHEME,
+    new CslSdkContentProvider(client)
   );
+  context.subscriptions.push(cslSdkProviderRegistration);
 
   context.subscriptions.push(
     vscode.commands.registerCommand("csl.restartServer", async () => {
@@ -132,12 +132,12 @@ export function activate(context: vscode.ExtensionContext) {
       await client.start();
 
       // Re-register the content provider with the new client.
-      context.subscriptions.push(
-        vscode.workspace.registerTextDocumentContentProvider(
-          CSL_SDK_SCHEME,
-          new CslSdkContentProvider(client)
-        )
+      cslSdkProviderRegistration?.dispose();
+      cslSdkProviderRegistration = vscode.workspace.registerTextDocumentContentProvider(
+        CSL_SDK_SCHEME,
+        new CslSdkContentProvider(client)
       );
+      context.subscriptions.push(cslSdkProviderRegistration);
     })
   );
 
