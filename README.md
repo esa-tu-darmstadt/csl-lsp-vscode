@@ -1,6 +1,6 @@
 # CSL Language Server
 
-Language server extension for Cerebras Software Language (CSL), providing rich editor features beyond syntax highlighting.
+Inofficial language server for Cerebras Software Language (CSL), providing rich editor features beyond syntax highlighting.
 
 <!-- ![CSL Language Server in action](images/demo.gif) -->
 
