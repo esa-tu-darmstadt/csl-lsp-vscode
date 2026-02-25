@@ -1,8 +1,8 @@
 {
   "name": "csl-lsp",
-  "displayName": "CSL Language Server",
-  "description": "Language server for Cerebras Software Language (CSL) -- diagnostics, hover, go-to-definition, and more.",
-  "version": "1.0.0",
+  "displayName": "Language Server for CSL",
+  "description": "Language Server for Cerebras Software Language (CSL)",
+  "version": "0.0.0",
   "publisher": "esa-tu-darmstadt",
   "license": "MIT",
   "repository": {
