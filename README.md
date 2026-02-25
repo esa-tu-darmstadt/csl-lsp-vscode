@@ -1,16 +1,36 @@
 # CSL Language Server
 
-Language server for Cerebras Software Language (CSL) providing rich editor features beyond syntax highlighting.
+Language server extension for Cerebras Software Language (CSL), providing rich editor features beyond syntax highlighting.
 
-![CSL Language Server in action](images/demo.gif)
+<!-- ![CSL Language Server in action](images/demo.gif) -->
+
+## Required Setup
+
+Before using the extension, set **`csl.systemModuleSif`** to point to the `.sif` file in the Cerebras SDK. The language server extracts system modules from that container to resolve imports with angle bracket syntax (`<...>`). Alternatively, you can set `csl.systemImportPath` to a directory containing the extracted system modules.
+
+This is required so system module imports (`<...>`) can be resolved correctly.
 
 ## Features
 
 - **Diagnostics** -- real-time error and warning reporting as you type
 - **Hover** -- type information and documentation on hover
-- **Go to Definition** -- jump to the definition of functions, variables, and imports
+- **Go to Definition** -- jump to definitions of functions, variables, and imports
 - **Auto-completion** -- context-aware code completion suggestions
+- **Dot completion** -- member/field completions after `.`
+- **Function signature help** -- call argument hints with active parameter highlighting
 - **Document Symbols** -- outline view and symbol search within a file
+
+## Why this language server exists
+
+The frontend used by this language server was originally developed for the CSL transpiler that we are building in a research project at TU Darmstadt. 
+That transpiler performs whole-program transformations, including lowering coroutine-style code into explicit FSM-style code.
+
+Those transformations depend on accurate static types for the full program.  
+In CSL (similar to Zig), types are first-class values, and thus infering static type information requires comptime evaluation of the complete program.
+
+For that reason, comptime-related analysis in this extension is intended to model CSL semantics fully, not as a best-effort approximation for editor tooling.
+
+If you observe a mismatch with the official CSL compiler (especially after SDK updates), please open an issue and include a minimal repro.
 
 ## Settings
 
@@ -18,14 +38,13 @@ Configure the extension under `csl.*` in your VS Code settings:
 
 | Setting                | Description                                              | Default     |
 |------------------------|----------------------------------------------------------|-------------|
-| `csl.serverPath`       | Override path to the LSP server binary. Leave empty to use the bundled binary. | (empty) |
-| `csl.arch`             | Target architecture.                                     | `wse2`      |
-| `csl.systemModuleSif` | Path to a .sif container providing system modules. If specified, this container is used to resolve imports with angle bracket syntax (`<...>`), and `csl.systemImportPath` is used as the internal search path within the container. | (empty)     |
-| `csl.systemImportPath` | Search path for system module imports (`<...>` syntax).  | `/cb/toolchains/cslang/*/*/csl-libs/` if `csl.systemModuleSif` is set, otherwise empty |
-| `csl.params`           | Parameter bindings as key-value pairs. Numbers containing `.` are `comptime_float`, otherwise `comptime_int`. | `{}` |
+| `csl.systemModuleSif`  | Path to a `.sif` container providing system modules. Required for resolving imports with angle bracket syntax (`<...>`). | (empty) |
+| `csl.systemImportPath` | Search path for system module imports (`<...>` syntax). | `/cb/toolchains/cslang/*/*/csl-libs/` if `csl.systemModuleSif` is set, otherwise empty |
+| `csl.arch`             | Target architecture (optional).                          | `wse2`      |
+| `csl.params`           | Parameter bindings as key-value pairs (optional). Numbers containing `.` are `comptime_float`, otherwise `comptime_int`. | `{}` |
 | `csl.rectangle`        | Rectangle size as `width,height` for `@get_rectangle`.   | `100,100`   |
 | `csl.fabricDims`       | Fabric dimensions as `width,height`.                     | `100,100`   |
-| `csl.fabricOffsets`     | Fabric offsets as `x,y`.                                 | `3,3`       |
+| `csl.fabricOffsets`    | Fabric offsets as `x,y`.                                 | `3,3`       |
 | `csl.serverArgs`       | Additional CLI arguments passed to the server.           | `[]`        |
 | `csl.trace.server`     | Trace LSP communication (`off`, `messages`, `verbose`).  | `off`       |
 
@@ -33,8 +52,8 @@ Configure the extension under `csl.*` in your VS Code settings:
 
 ```json
 {
-  "csl.arch": "wse3",
   "csl.systemModuleSif": "/opt/Cerebras-SDK-1.4.0-202505230211-4-d9070058/sdk-cbcore-202505230211-4-9382352f.sif",
+  "csl.arch": "wse3",
   "csl.params": {
     "M": 4,
     "N": 4,
@@ -45,13 +64,13 @@ Configure the extension under `csl.*` in your VS Code settings:
 
 ## About
 
-This extension is part of a research project at TU Darmstadt (Embedded Systems and Applications Group) that builds MLIR-based compiler infrastructure for Cerebras Wafer-Scale Engines (WSE). Among other things, the project includes a transpiler that extends CSL with additional language features and compiles back to standard CSL. The language server is built on top of the transpiler's frontend, reusing its parser and compile-time evaluation to provide editor features.
+This extension is part of a research project at TU Darmstadt (Embedded Systems and Applications Group) that builds MLIR-based compiler infrastructure for Cerebras Wafer-Scale Engines (WSE).
 
 ## Feedback and Contact
 
 Bug reports and feature requests can be filed on the [GitHub issue tracker](https://github.com/esa-tu-darmstadt/csl-lsp-vscode/issues).
 
-The underlying compiler infrastructure is not publicly available at this time. If you are interested in the project or in collaborating, feel free to reach out to us by email: noack@esa.tu-darmstadt.de
+If you are interested in the project or in collaborating, feel free to reach out by email: noack@esa.tu-darmstadt.de
 
 ## Note
 
