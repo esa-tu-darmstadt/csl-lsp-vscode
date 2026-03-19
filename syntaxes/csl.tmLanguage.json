@@ -7,7 +7,7 @@
 			"name": "comment.line.double-slash.csl"
 		},
 		{
-			"match": "\\b(align|and|asm|break|comptime|color|const|continue|else|export|extern|fn|for|if|layout|linkname|linksection|or|param|return|struct|task|var|while|inline|volatile|noinline)\\b",
+			"match": "\\b(align|and|asm|break|comptime|color|const|continue|else|export|extern|fn|for|if|layout|linkname|linksection|or|param|return|struct|task|var|while|inline|volatile|noinline|async|await|suspend)\\b",
 			"name": "keyword.control.csl"
 		},
 		{
@@ -81,7 +81,6 @@
 			"name": "constant.numeric.csl"
 		}
 	],
-	"repository": {
-	},
+	"repository": {},
 	"scopeName": "source.csl"
 }
