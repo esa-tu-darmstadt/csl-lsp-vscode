@@ -1,14 +1,12 @@
 # CSL Language Server
 
-Inofficial language server for Cerebras Software Language (CSL), providing rich editor features beyond syntax highlighting.
+Inofficial language server for the Cerebras Software Language (CSL), providing rich editor features beyond syntax highlighting.
 
 <!-- ![CSL Language Server in action](images/demo.gif) -->
 
 ## Required Setup
 
 Before using the extension, set **`csl.systemModuleSif`** to point to the `.sif` file in the Cerebras SDK. The language server extracts system modules from that container to resolve imports with angle bracket syntax (`<...>`). Alternatively, you can set `csl.systemImportPath` to a directory containing the extracted system modules.
-
-This is required so system module imports (`<...>`) can be resolved correctly.
 
 ## Features
 
