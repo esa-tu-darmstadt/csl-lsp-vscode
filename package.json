@@ -4,7 +4,7 @@
   "description": "Language Server for Cerebras Software Language (CSL)",
   "version": "0.0.0",
   "publisher": "esa-tu-darmstadt",
-  "license": "MIT",
+  "license": "Apache-2.0 WITH LLVM-exception",
   "repository": {
     "type": "git",
     "url": "https://github.com/esa-tu-darmstadt/csl-lsp-vscode"
